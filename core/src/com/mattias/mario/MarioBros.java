@@ -10,6 +10,7 @@ import com.mattias.mario.screens.PlayScreen;
 public class MarioBros extends Game {
 	public static final int theWidth = 400;
 	public static final int theHeight= 208;
+	public static final float PPM = 100;
 	public SpriteBatch batch;
 
 	
