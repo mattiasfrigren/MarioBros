@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mattias.mario.MarioBros;
+import com.mattias.mario.screens.PlayScreen;
 import com.mattias.mario.sprites.Brick;
 import com.mattias.mario.sprites.Coin;
 import com.mattias.mario.sprites.Mario;
@@ -26,9 +27,9 @@ public class B2WorldCreator {
 
 
 
-    public B2WorldCreator(World world, TiledMap map){
-
-
+    public B2WorldCreator(PlayScreen screen){
+        World world = screen.getWorld();
+        TiledMap map = screen.getMap();
 
         shape = new PolygonShape();
 
@@ -50,13 +51,13 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-           new Coin(world,map,rect);
+           new Coin(screen,rect);
         }
         //create bricks
         for(MapObject object: map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new Brick(world,map,rect);
+            new Brick(screen,rect);
         }
         //create pipes
         for(MapObject object: map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
@@ -70,6 +71,7 @@ public class B2WorldCreator {
             shape.setAsBox((rect.getWidth()/2)/MarioBros.PPM,(rect.getHeight()/2)/MarioBros.PPM);
 
             fdef.shape = shape;
+            fdef.filter.categoryBits = MarioBros.OBJECT_BIT;
             body.createFixture(fdef);
         }
     }

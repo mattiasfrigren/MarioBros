@@ -3,9 +3,11 @@ package com.mattias.mario.sprites;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mattias.mario.MarioBros;
@@ -26,9 +28,9 @@ public class Mario extends Sprite {
     private float stateTimer;
 
 
-    public Mario(World world, PlayScreen screen){
+    public Mario(PlayScreen screen){
         super(screen.getAtlas().findRegion("little_mario"));
-        this.world = world;
+        this.world = screen.getWorld();
         currentState = State.STANDING;
         prevState = State.STANDING;
         stateTimer =0;
@@ -106,8 +108,16 @@ public class Mario extends Sprite {
         FixtureDef fdef =new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(6 /MarioBros.PPM);
+        fdef.filter.categoryBits = MarioBros.MARIO_BIT;
+        fdef.filter.maskBits = MarioBros.GROUND_BIT | MarioBros.BRICK_BIT | MarioBros.COIN_BIT |MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT | MarioBros.ENEMY_HEAD_BIT;
         fdef.shape = shape;
         b2Body.createFixture(fdef);
+
+        EdgeShape head = new EdgeShape();
+        head.set(new Vector2(-2/MarioBros.PPM,6/MarioBros.PPM),new Vector2(+2/MarioBros.PPM, 6/MarioBros.PPM));
+        fdef.shape = head;
+        fdef.isSensor =true;
+        b2Body.createFixture(fdef).setUserData("head");
 
     }
 }
